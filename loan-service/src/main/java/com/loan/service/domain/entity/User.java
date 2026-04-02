@@ -3,6 +3,10 @@ package com.loan.service.domain.entity;
 import com.loan.service.domain.enums.EmploymentType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -30,6 +34,7 @@ public class User extends BaseEntity {
     @Column(name = "monthly_income", nullable = false)
     private BigDecimal monthlyIncome;
 
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Enumerated(EnumType.STRING)
     @Column(name = "employment_type", nullable = false)
     private EmploymentType employmentType;
