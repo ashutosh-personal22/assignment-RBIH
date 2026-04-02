@@ -29,6 +29,7 @@ public class LoanApplication extends BaseEntity {
     private BigDecimal monthlyIncomeSnapshot;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "employment_type_snapshot", nullable = false)
     private EmploymentType employmentTypeSnapshot;
 
@@ -42,14 +43,17 @@ public class LoanApplication extends BaseEntity {
     private Short tenureMonths;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "loan_purpose", nullable = false)
     private LoanPurpose loanPurpose;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private ApplicationStatus status;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "risk_band")
     private RiskBand riskBand;
 
