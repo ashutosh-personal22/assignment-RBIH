@@ -1,0 +1,120 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: loan-service
+
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loan_db
+    username: admin
+    password: role
+    driver-class-name: org.postgresql.Driver
+
+    hikari:
+      pool-name: LoanHikariPool
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+      auto-commit: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  jackson:
+    serialization:
+      indent-output: true
+    default-property-inclusion: non_null
+
+# =========================
+# SWAGGER / OPENAPI CONFIG
+# =========================
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    display-request-duration: true
+
+# =========================
+# LOGGING CONFIG
+# =========================
+logging:
+  level:
+    root: INFO
+    com.loan: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# =========================
+# MANAGEMENT (OPTIONAL BONUS)
+# =========================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# =========================
+# CUSTOM APPLICATION CONFIG
+# =========================
+app:
+  loan:
+    base-interest-rate: 12
+
+    risk:
+      low-threshold: 750
+      medium-threshold: 650
+
+    emi:
+      max-allowed-percentage: 0.6
+      approval-percentage: 0.5
+
+    loan:
+      min-amount: 10000
+      max-amount: 5000000
+      min-tenure: 6
+      max-tenure: 360
+
+    age:
+      min: 21
+      max: 60
+      max-with-tenure: 65
+
+    interest:
+      risk-premium:
+        low: 0
+        medium: 1.5
+        high: 3
+
+      employment-premium:
+        salaried: 0
+        self-employed: 1
+
+      loan-size-premium:
+        threshold: 1000000
+        premium: 0.5
