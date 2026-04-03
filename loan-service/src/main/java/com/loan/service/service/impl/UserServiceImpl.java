@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponse(user);
     }
 
-    // 🔥 Common method (reusable)
     private User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));

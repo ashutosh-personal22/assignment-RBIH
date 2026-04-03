@@ -1,6 +1,8 @@
 package com.loan.service.dto.response;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.math.BigDecimal;
 
 @Getter

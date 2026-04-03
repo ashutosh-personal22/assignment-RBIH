@@ -1,7 +1,8 @@
 package com.loan.service.dto.response;
 
 import com.loan.service.domain.enums.EmploymentType;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.UUID;

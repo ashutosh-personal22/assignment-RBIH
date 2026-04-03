@@ -2,9 +2,9 @@ package com.loan.service.domain.entity;
 
 import com.loan.service.domain.enums.EmploymentType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;

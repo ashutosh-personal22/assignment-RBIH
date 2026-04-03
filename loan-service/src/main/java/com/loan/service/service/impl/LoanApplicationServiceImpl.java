@@ -15,7 +15,6 @@ import com.loan.service.repository.LoanOfferRepository;
 import com.loan.service.repository.UserRepository;
 import com.loan.service.service.LoanApplicationService;
 import com.loan.service.util.EmiCalculator;
-import com.loan.service.mapper.ObjectConverter.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,10 +41,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private final EmiCalculator             emiCalculator;
     private final ObjectConverter            objectConverter;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Public API
-    // ─────────────────────────────────────────────────────────────────────────
-
     @Override
     @Transactional
     public LoanApplicationResponse applyLoan(String email, LoanRequest request) {
@@ -55,18 +50,15 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         LoanRequest.Applicant applicant = request.getApplicant();
         LoanRequest.Loan      loan      = request.getLoan();
 
-        // Step 1: Section 3 — Eligibility rules (hard reject at 60%)
         List<String> rejectionReasons = evaluateEligibility(applicant, loan);
 
         if (!rejectionReasons.isEmpty()) {
             return persistAndBuildRejectedResponse(user, applicant, loan, rejectionReasons);
         }
 
-        // Step 2: Section 4 & 5 — Risk band + interest rate
         RiskBand   riskBand     = classifyRiskBand(applicant.getCreditScore());
         BigDecimal interestRate = calculateInterestRate(applicant, loan, riskBand);
 
-        // Step 3: Section 6 — Offer generation (reject if EMI > 50%)
         BigDecimal emi          = emiCalculator.calculate(loan.getAmount(), loan.getTenureMonths(), interestRate);
         BigDecimal maxOfferEmi  = applicant.getMonthlyIncome().multiply(OFFER_EMI_LIMIT);
 
@@ -90,10 +82,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 .map(objectConverter::mapToResponse)
                 .toList();
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Section 3 — Eligibility Evaluation
-    // ─────────────────────────────────────────────────────────────────────────
 
     private List<String> evaluateEligibility(LoanRequest.Applicant applicant,
                                              LoanRequest.Loan loan) {
@@ -123,9 +111,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         return reasons;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Section 4 — Risk Band Classification
-    // ─────────────────────────────────────────────────────────────────────────
 
     private RiskBand classifyRiskBand(int creditScore) {
         if (creditScore >= 750) return RiskBand.LOW;
@@ -133,9 +118,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         return RiskBand.HIGH;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Section 5 — Interest Rate Calculation
-    // ─────────────────────────────────────────────────────────────────────────
 
     private BigDecimal calculateInterestRate(LoanRequest.Applicant applicant,
                                              LoanRequest.Loan loan,
@@ -162,9 +144,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 .add(loanSizePremium);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Persistence Helpers
-    // ─────────────────────────────────────────────────────────────────────────
 
     private LoanApplicationResponse persistAndBuildRejectedResponse(
             User user,
@@ -227,10 +206,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 .build();
     }
 
-    /**
-     * Builds a LoanApplication with all common fields populated.
-     * Avoids duplication between approved and rejected paths.
-     */
+
     private LoanApplication buildBaseApplication(User user,
                                                  LoanRequest.Applicant applicant,
                                                  LoanRequest.Loan loan) {
@@ -239,8 +215,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         app.setLoanAmount(loan.getAmount());
         app.setTenureMonths(loan.getTenureMonths().shortValue());
         app.setLoanPurpose(loan.getPurpose());
-
-        // Snapshot fields (NOT NULL in DB)
         app.setApplicantAgeSnapshot(applicant.getAge().shortValue());
         app.setMonthlyIncomeSnapshot(applicant.getMonthlyIncome());
         app.setEmploymentTypeSnapshot(applicant.getEmploymentType());
@@ -248,11 +222,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
         return app;
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Mapping Helper (for getUserLoans)
-    // ─────────────────────────────────────────────────────────────────────────
-
 
 
     private User getUserByEmail(String email) {

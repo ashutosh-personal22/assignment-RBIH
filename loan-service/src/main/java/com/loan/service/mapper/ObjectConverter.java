@@ -7,9 +7,11 @@ import com.loan.service.dto.response.LoanApplicationResponse;
 import com.loan.service.exception.ResourceNotFoundException;
 import com.loan.service.repository.LoanOfferRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class ObjectConverter {
 
