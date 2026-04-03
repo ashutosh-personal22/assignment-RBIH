@@ -4,7 +4,8 @@ import com.loan.service.domain.enums.EmploymentType;
 import com.loan.service.domain.enums.LoanPurpose;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 

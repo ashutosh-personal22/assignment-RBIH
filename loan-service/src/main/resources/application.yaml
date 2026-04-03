@@ -118,3 +118,9 @@ app:
       loan-size-premium:
         threshold: 1000000
         premium: 0.5
+#==========================
+#       JWT
+#=========================
+jwt:
+  secret: ThisIsASecretKeyForJwtTokenThatIsAtLeast32Characters
+  expiration: 86400000
